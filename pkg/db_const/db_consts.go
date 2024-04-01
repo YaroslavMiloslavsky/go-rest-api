@@ -6,4 +6,5 @@ const (
 	EnvPostgresPasswordKey = "POSTGRES_PASSWORD"
 	EnvPostgresHostKey = "POSTGRES_HOST"
 	EnvPostgresPortKey = "POSTGRES_PORT"
+	EnvPostgresDBKey = "POSTGRES_DB"
 )

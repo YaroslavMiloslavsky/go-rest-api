@@ -9,18 +9,14 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
-type PostgresDB struct {
-	db *sql.DB
-}
+type PostgresDB struct {}
 
 func CreateNewPostgresDB() *PostgresDB {
-	psql := &PostgresDB{}
-	psql.db = nil
-	return psql
+	return &PostgresDB{}
 }
 
 func (p *PostgresDB) GetAllUsers() (*[]api.UserFromDB, error) {
-	connectionString := utils.GetPostgresUrl("go_users")
+	connectionString := utils.GetPostgresUrl()
 
 	db, err := sql.Open("pgx", connectionString)
 	if err != nil {

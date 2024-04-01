@@ -4,33 +4,18 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/YaroslavMiloslavsky/go-rest-api/api"
-	"github.com/YaroslavMiloslavsky/go-rest-api/internal/database"
-	header_const "github.com/YaroslavMiloslavsky/go-rest-api/pkg/headers"
+	"github.com/YaroslavMiloslavsky/go-rest-api/internal/service"
+	"github.com/YaroslavMiloslavsky/go-rest-api/pkg/header_const"
 )
 
-var db database.DBInterface = database.CreateNewPostgresDB()
-
+var userService service.UserServiceInterface = service.CreateNewUserService()
 
 func GetAllUsers(r http.ResponseWriter, req *http.Request) {
-	usersFromDB, err := db.GetAllUsers()
+	response, err := userService.GetAll()
+
 	if err != nil {
-		log.Printf("Could not get users: %v\n", err)
-		return
+		log.Printf("Could not fetch users from service: %s\n", err)
 	}
-
-	users := []api.UserDTO{}
-
-	for _, user := range *usersFromDB {
-		users = append(users, api.UserDTO{
-			Username: user.Username,
-			Age: user.Age,
-		})
-	}
-
-	response := api.UsersGetAll{}
-	response.Users = users
-	response.Count = len(*usersFromDB)
 
 	r.Header().Set(header_const.WebHeaderKeyContentType, header_const.WebHeaderValueContentTypeJson)
 	encoder := json.NewEncoder(r)
