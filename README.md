@@ -15,7 +15,6 @@ This project is a REST API written in Go that serves as a template for anyone lo
 - [ ] Add tests for GetAllUsers
 - [ ] Implement CRUD operations
 - [ ] Add authentication using OAuth2
-- [ ] <b>(Optional)</b> Add Migration method 
 - [ ] Create a build file (Makefile perhaps)
 - [ ] Dockerize the application
 - [ ] Host it as a microservice
