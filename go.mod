@@ -1,11 +1,8 @@
 module github.com/YaroslavMiloslavsky/go-rest-api
 
-go 1.21.4
+go 1.22.1
 
-require (
-	github.com/go-chi/chi/v5 v5.0.12
-	github.com/jackc/pgx/v5 v5.5.5
-)
+require github.com/jackc/pgx/v5 v5.5.5
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect

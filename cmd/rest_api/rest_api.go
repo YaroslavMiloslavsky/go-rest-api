@@ -6,18 +6,22 @@ import (
 	"github.com/YaroslavMiloslavsky/go-rest-api/internal/handler"
 	"github.com/YaroslavMiloslavsky/go-rest-api/internal/logger"
 	"github.com/YaroslavMiloslavsky/go-rest-api/pkg/utils"
-	"github.com/go-chi/chi/v5"
+	"github.com/YaroslavMiloslavsky/go-rest-api/internal/middleware"
 )
 
-var r http.Handler
 
 func main() {
+	var router http.Handler
 	logger := logger.CreateNew()
 
-	r = chi.NewRouter()
-	handler.Handler(&r)
+	router = http.NewServeMux()
+	handler.Handler(&router)
+	mStack := middleware.CreateMiddlewareStack(
+		middleware.StripSlashes,
+	)
+
 	serverURL := utils.GetServerURL()
 	logger.Println("about to serve " + serverURL)
 
-	http.ListenAndServe(serverURL, r)
+	http.ListenAndServe(serverURL, 	mStack(router))
 }

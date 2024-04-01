@@ -8,10 +8,18 @@ import (
 	"github.com/YaroslavMiloslavsky/go-rest-api/pkg/header_const"
 )
 
-var userService service.UserServiceInterface = service.CreateNewUserService()
+type UserHandler struct {
+	service service.UserServiceInterface
+}
 
-func GetAllUsers(r http.ResponseWriter, req *http.Request) {
-	response, err := userService.GetAll()
+func CreateNewUserHandler() *UserHandler {
+	handler := UserHandler{}
+	handler.service = service.CreateNewUserService()
+	return &handler
+}
+
+func(u *UserHandler) GetAllUsers(r http.ResponseWriter, req *http.Request) {
+	response, err := u.service.GetAll()
 
 	if err != nil {
 		log.Printf("Could not fetch users from service: %s\n", err)
