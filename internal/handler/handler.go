@@ -22,8 +22,9 @@ func Handler(r *http.Handler) {
 
 	muxRouter.Use(middleware.StripSlashes)
 	muxRouter.Route("/users", func(r chi.Router) {
+		log.Println("Mapping routes to handler")
 		// TODO: add Auth -> only ADMIN can execute this
 		r.Get("/all", GetAllUsers)
 	});
-
+	log.Println("Routes were mapped")
 }

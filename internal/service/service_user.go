@@ -21,6 +21,7 @@ func CreateNewUserService() *UserServiceImpl {
 }
 
 func (u *UserServiceImpl) GetAll() (*api.UsersGetAll, error) {
+	log.Println("Service GetAll() invoked")
 	usersFromDB, err :=(*u.database).GetAllUsers()
 
 	if err != nil {
@@ -28,6 +29,7 @@ func (u *UserServiceImpl) GetAll() (*api.UsersGetAll, error) {
 		return &api.UsersGetAll{}, nil
 	}
 
+	log.Println("Results were received from repository layer")
 	users := []api.UserDTO{}
 
 	for _, user := range *usersFromDB {
@@ -41,5 +43,6 @@ func (u *UserServiceImpl) GetAll() (*api.UsersGetAll, error) {
 	response.Users = users
 	response.Count = len(*usersFromDB)
 
+	log.Println("Service GetAll() finished without errors")
 	return &response, nil
 }

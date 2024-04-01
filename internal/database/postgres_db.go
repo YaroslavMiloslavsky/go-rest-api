@@ -9,7 +9,7 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
-type PostgresDB struct {}
+type PostgresDB struct{}
 
 func CreateNewPostgresDB() *PostgresDB {
 	return &PostgresDB{}
@@ -23,6 +23,7 @@ func (p *PostgresDB) GetAllUsers() (*[]api.UserFromDB, error) {
 		log.Printf("Could not connect for postgres: %s\n", err)
 		return nil, err
 	}
+	log.Println("Connection with db was established")
 	defer db.Close()
 
 	rows, err := db.Query("SELECT * FROM users")
@@ -30,7 +31,8 @@ func (p *PostgresDB) GetAllUsers() (*[]api.UserFromDB, error) {
 		log.Printf("Could not query for data: %s\n", err)
 		return nil, err
 	}
-
+	defer rows.Close()
+	log.Println("Query was executed and returned with results")
 	var users []api.UserFromDB
 
 	for rows.Next() {
@@ -41,9 +43,8 @@ func (p *PostgresDB) GetAllUsers() (*[]api.UserFromDB, error) {
 		}
 		users = append(users, user)
 	}
-	err = rows.Close()
-	if err != nil {
-		log.Printf("Could not close rows properly: %v\n", err)
-	}
+
+	log.Printf("Returning %d results\n", len(users))
+	log.Printf("Closing db connection")
 	return &users, nil
 }
