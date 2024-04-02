@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"embed"
+	"flag"
 	"net/http"
 
 	"github.com/YaroslavMiloslavsky/go-rest-api/internal/handler"
@@ -32,7 +33,10 @@ func main() {
 	http.ListenAndServe(serverURL, mStack(router))
 }
 
+// For enabling testing properties for the app run executable with -testing flag
 func onStartUp() {
+	dummyData := flag.Bool("testing", false, "Populate data for testing")
+	flag.Parse()
 	connectionString := utils.GetPostgresUrl()
 
 	db, err := sql.Open("pgx", connectionString)
@@ -41,9 +45,18 @@ func onStartUp() {
 		return
 	}
 	defer db.Close()
+
 	sqlBytes, err := schemaSQL.ReadFile("sql/startup.sql")
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if *dummyData {
+		sqlBytes, err = schemaSQL.ReadFile("sql/dummy_data.sql")
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Testing data was populated")
 	}
 
 	queries := string(sqlBytes)
