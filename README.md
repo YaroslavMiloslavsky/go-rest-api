@@ -12,10 +12,16 @@ This project is a REST API written in Go that serves as a template for anyone lo
 
 ## Goals
 - [X] Create a basic infrastructure
-- [ ] Add tests for GetAllUsers
-- [ ] Implement CRUD operations
+- [X] Create a startup DB setup cpabilities
+- [X] Create a build.bat
+- [ ] Create a Makefile
+- [ ] Add testing capcbilities
+- [ ] Implement all CRUD operations
+    - [ ] Add user
+    - [ ] Get user
+    - [ ] Delete User
+- [ ] Implement subrouting
 - [ ] Add authentication using OAuth2
-- [ ] Create a build file (Makefile perhaps)
 - [ ] Dockerize the application
 - [ ] Host it as a microservice
 
