@@ -28,8 +28,10 @@ This project is a REST API written in Go that serves as a template for anyone lo
 ## Getting Started
 1. Clone this repository.
 2. Customize the code to fit your specific requirements.
-3. Create a Database and SQL files by the API that is provided (Will add migrations later)
+3. Create a Database by the specifications the API that is provided (For now a postgres)
 3. Run the application locally for testing and development.
+    1. build.bat
+    2. Makefile (soon)
 4. Deploy the application to your preferred hosting service.
 
 ## Usage
