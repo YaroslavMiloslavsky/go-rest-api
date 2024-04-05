@@ -16,7 +16,9 @@ import (
 var schemaSQL embed.FS
 
 var (
-	log = logger.CreateNew()
+	log      = logger.CreateNew()
+	testData = flag.Bool("testing", false, "Populate data for testing")
+	dropDB   = flag.Bool("drop-tables", false, "Drop all DB tables")
 )
 
 func main() {
@@ -33,9 +35,7 @@ func main() {
 	http.ListenAndServe(serverURL, mStack(router))
 }
 
-// For enabling testing properties for the app run executable with -testing flag
 func onStartUp() {
-	dummyData := flag.Bool("testing", false, "Populate data for testing")
 	flag.Parse()
 	connectionString := utils.GetPostgresUrl()
 
@@ -46,24 +46,56 @@ func onStartUp() {
 	}
 	defer db.Close()
 
-	sqlBytes, err := schemaSQL.ReadFile("sql/startup.sql")
-	if err != nil {
-		log.Fatal(err)
-	}
+	scriptsToExecute := make([][]byte, 8)
+	scriptsToExecute = append(scriptsToExecute, dropDb())
+	scriptsToExecute = append(scriptsToExecute, startupDb())
+	scriptsToExecute = append(scriptsToExecute, populateTestData())
 
-	if *dummyData {
-		sqlBytes, err = schemaSQL.ReadFile("sql/dummy_data.sql")
+	for _, script := range scriptsToExecute {
+		if script != nil {
+			executeQuery(db, script)
+		}
+	}
+}
+
+func populateTestData() []byte {
+	if *testData {
+		sqlBytes, err := schemaSQL.ReadFile("sql/test_data.sql")
 		if err != nil {
 			log.Fatal(err)
 		}
 		log.Println("Testing data was populated")
+		return sqlBytes
 	}
+	return nil
+}
 
+func startupDb() []byte {
+	sqlBytes, err := schemaSQL.ReadFile("sql/startup.sql")
+	if err != nil {
+		log.Fatal(err)
+		return nil
+	}
+	log.Println("Tables created successfully!")
+	return sqlBytes
+}
+
+func dropDb() []byte {
+	if *dropDB {
+		sqlBytes, err := schemaSQL.ReadFile("sql/drop_db.sql")
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("DB tables were dropped")
+		return sqlBytes
+	}
+	return nil
+} 
+
+func executeQuery(db *sql.DB, sqlBytes[]byte) {
 	queries := string(sqlBytes)
-	_, err = db.Exec(queries)
+	_, err := db.Exec(queries)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	log.Println("Tables created successfully!")
 }

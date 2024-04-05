@@ -31,13 +31,21 @@ This project is a REST API written in Go that serves as a template for anyone lo
 3. Create a Database by the specifications the API that is provided (For now a postgres)
 3. Run the application locally for testing and development.
     1. build.bat
+    ``` cmd
+    build.bat
+    ```
     2. Makefile (soon)
-4. Deploy the application to your preferred hosting service.
+4. Locally run
+``` bash
+./app
+```
+5. To see which flags does the app has, simple run 
+``` bash
+./app -help (or --h) 
+```
 
 ## Usage
-1. Install Go and any necessary dependencies.
-2. Build the application using `go build`.
-3. Run the application using `.cmd/rest_api/rest_api` (or rest_api.exe if using Windows).
+1. Try one of the endpoints provided above
 
 ## Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests.
